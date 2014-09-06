@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<!--
+Copyright 2014 Curiosity driven
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<html>
+<head>
+    <title>Superscript compiler</title>
+    <script src="scripts/ast.js"></script>
+    <script src="scripts/builtin.js"></script>
+    <script src="scripts/bytecode.js"></script>
+    <script src="scripts/visitor.js"></script>
+    <script src="scripts/call-marker.js"></script>
+    <script src="scripts/compile.js"></script>
+    <script src="scripts/emit.js"></script>
+    <script src="scripts/emitter.js"></script>
+    <script src="scripts/extract-verify.js"></script>
+    <script src="scripts/inline.js"></script>
+    <script src="scripts/optimizations.js"></script>
+    <script src="scripts/parser.js"></script>
+    <script src="scripts/replace-bytecode.js"></script>
+    <style>
+        textarea {
+            width: 50%;
+            height: 300px;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<h1>Superscript compiler</h1>
+<p>For details see the <a href="README.md">README document</a> or the <a href="https://curiosity-driven.org/bitcoin-contracts">Bitcoin contracts</a> article.</p>
+<p>Superscript:</p>
+<textarea id="input">assume signatureA, signatureB, secret
+
+let secretKnown = sha256(secret) == '527ccdd755dcccf03192383624e0a7d0263815ce2ecf1f69cb0423ab7e6f0f3e'
+
+let pubKeyA = '04d4bf4642f56fc7af0d2382e2cac34fa16ed3321633f91d06128f0e5c0d17479778cc1f2cc7e4a0c6f1e72d905532e8e127a031bb9794b3ef9b68b657f51cc691'
+let pubKeyB = '04c9ce67ff2df2cd6be5f58345b4e311c5f10aab49d3cf3f73e8dcac1f9cd0de966e924be091e7bc854aef0d0baafa80fe5f2d6af56b1788e1e8ec8d241b41c40d'
+
+let signedByA = checkSig(signatureA, pubKeyA)
+let signedByB = checkSig(signatureB, pubKeyB)
+
+verify (secretKnown || signedByB) &amp;&amp; signedByA</textarea>
+<input type="button" value="Compile" id="compileBtn">
+<p>Bitcoin script:</p>
+<textarea id="output"></textarea>
+<script>
+document.getElementById("compileBtn").addEventListener("click", function() {
+    var code = document.getElementById("input").value;
+    var script = compile(code).join("\n");
+    document.getElementById("output").value = script;
+});
+</script>
+</body>
+</html>
